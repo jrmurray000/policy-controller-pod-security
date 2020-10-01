@@ -74,22 +74,6 @@ spec:
   parameters:
     rule: "RunAsAny"
 ---
-#runAsUser
-apiVersion: constraints.gatekeeper.sh/v1beta1
-kind: K8sPSPFSGroup
-metadata:
-  name: psp-fsgroup
-spec:
-  match:
-    kinds:
-      - apiGroups: [""]
-        kinds: ["Pod"]
-      - namespaceSelector:
-          matchExpressions:
-            - {key: pod_security, operator: notIn, values: [exempt]}
-  parameters:
-    rule: "RunAsAny"
----
 #volumes
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPVolumeTypes
