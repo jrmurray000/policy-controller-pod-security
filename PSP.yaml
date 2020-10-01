@@ -1,0 +1,115 @@
+#allowHostIPC, allowHostPID
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPHostNamespace
+metadata:
+  name: psp-host-namespace
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - namespaceSelector:
+          matchExpressions:
+            - {key: pod_security, operator: notIn, values: [exempt]}
+---
+#allowHostNetwork, allowHostPorts
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPHostNetworkingPorts
+metadata:
+  name: psp-host-network-ports
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - namespaceSelector:
+          matchExpressions:
+            - {key: pod_security, operator: notIn, values: [exempt]}
+  parameters:
+    hostNetwork: false
+---
+#allowPrivilegedContainer
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPPrivilegedContainer
+metadata:
+  name: psp-privileged-container
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - namespaceSelector:
+          matchExpressions:
+            - {key: pod_security, operator: notIn, values: [exempt]}
+---
+#allowedCapabilities, requiredDropCapabilities
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPCapabilities
+metadata:
+  name: capabilities-demo
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - namespaceSelector:
+          matchExpressions:
+            - {key: pod_security, operator: notIn, values: [exempt]}
+  parameters:
+    requiredDropCapabilities: ["KILL","MKNOD","SYS_CHROOT"]
+---
+#fsGroup
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPFSGroup
+metadata:
+  name: psp-fsgroup
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - namespaceSelector:
+          matchExpressions:
+            - {key: pod_security, operator: notIn, values: [exempt]}
+  parameters:
+    rule: "RunAsAny"
+---
+#runAsUser
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPFSGroup
+metadata:
+  name: psp-fsgroup
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - namespaceSelector:
+          matchExpressions:
+            - {key: pod_security, operator: notIn, values: [exempt]}
+  parameters:
+    rule: "RunAsAny"
+---
+#volumes
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPVolumeTypes
+metadata:
+  name: psp-volume-types
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - namespaceSelector:
+          matchExpressions:
+            - {key: pod_security, operator: notIn, values: [exempt]}
+  parameters:
+    volumes:
+    # - "*" # * may be used to allow all volume types
+      - configMap
+      - downwardAPI
+      - emptyDir
+      - nfs
+      - persistentVolumeClaim
+      - projected
+      - secret
